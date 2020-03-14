@@ -9,12 +9,10 @@ public class CloudsController : MonoBehaviour
     Transform clouds1;
 
     // Movement speed in units per second.
-    private float speed = 1f;
-
-    // Total distance between the markers.
-    private float journeyLength = 10;
-
-    private Vector3 initPosition;
+    private float speed
+    {
+        get { return Character.getInstance().isPlaying ? 0.5f : 1f; }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -22,24 +20,24 @@ public class CloudsController : MonoBehaviour
         Transform background = GameObject.Find("Background").transform;
         clouds0 = background.Find("Clouds_0");
         clouds1 = background.Find("Clouds_1");
-        initPosition = clouds1.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        clouds0.position -= new Vector3(speed, 0, 0) * Time.deltaTime;
-        clouds1.position -= new Vector3(speed, 0, 0) * Time.deltaTime;
+        clouds0.position += new Vector3(speed, 0, 0) * Time.deltaTime;
+        clouds1.position += new Vector3(speed, 0, 0) * Time.deltaTime;
 
         // Check is cloud not visible in camera and move to init pos
         if (!Camera.main.IsObjectVisible(clouds0.gameObject))
         {
-            clouds0.position = initPosition;
+            Debug.Log("xddddddd");
+            clouds0.position = new Vector3(Camera.main.OrthographicBounds().min.x - clouds0.GetComponent<SpriteRenderer>().bounds.extents.x, clouds0.position.y, 1);
         }
 
         if (!Camera.main.IsObjectVisible(clouds1.gameObject))
         {
-            clouds1.position = initPosition;
+            clouds1.position = new Vector3(Camera.main.OrthographicBounds().min.x - clouds1.GetComponent<SpriteRenderer>().bounds.extents.x, clouds1.position.y, 1);
         }
     }
 }
